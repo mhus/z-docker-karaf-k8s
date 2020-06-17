@@ -1,5 +1,5 @@
 FROM mhus/karaf-k8s:4.2.6
 
-# COPY local-assembly.tgz /docker/assembly.tar.gz
-# COPY local-karaf /opt/karaf
+COPY data/local-assembly.tar.gz /docker/assembly.tar.gz
+COPY data/karaf /docker/profiles/custom-initial
 RUN /docker/install.sh

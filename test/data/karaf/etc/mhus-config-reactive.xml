@@ -1,0 +1,18 @@
+<mhus>
+  <de.mhus.cherry.reactive.osgi.ReactiveAdmin 
+    storageDsName="*"
+    archiveDsName="*"
+    logLevel="INFO"
+  >
+      <engine>
+        <parameter name="process:de.mhus.cherry.reactive.examples.simple1.S1Process:versions" value="0.0.1"/>  
+        <parameter name="process:de.mhus.cherry.reactive.examples.simple1.S1Process:active" value="0.0.1"/>  
+      </engine>
+  </de.mhus.cherry.reactive.osgi.ReactiveAdmin>
+  <de.mhus.osgi.services.adb.SopDbManagerService
+    enabled="false"
+  />
+  <de.mhus.micro.core.api.JmsApi
+    enabled="false"
+  />
+</mhus>

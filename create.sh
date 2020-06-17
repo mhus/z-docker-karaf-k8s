@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=4.2.6
+VERSION=4.2.6.0
 
 if [  ! -f Dockerfile ]; then
   echo "not a docker configuration"
@@ -15,7 +15,6 @@ else
 	docker build -t mhus/karaf-k8s:$VERSION .
 fi
 
-
 if [ "$1" = "test" ]; then
   cd test
   docker rmi mhus/karaf-k8s-test:$VERSION
@@ -27,5 +26,6 @@ fi
 
 if [ "$1" = "push" ]; then
     docker push "mhus/karaf-k8s:$VERSION"
+    docker tag "mhus/karaf-k8s:$VERSION" "mhus/karaf-k8s:last"
     docker push "mhus/karaf-k8s:last"
 fi 
