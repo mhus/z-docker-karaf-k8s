@@ -1,30 +1,9 @@
 #!/bin/bash
 
-if [ "x$CONFIG_PROFILE" == "x" ]; then
-  CONFIG_PROFILE=default
-fi
-export CONFIG_PROFILE
-
-cd /opt/karaf
-
-if [ "x$START_REINSTALL" == "x1" ]; then
-  rm assembly.mark
-  rm installdone.mark
-  rm environmentdone.mark
-fi
-
 # prepare karaf
 cd /opt/karaf
 rm instances/instance.properties 
 
-# assembly
-cd /opt/karaf
-if [ ! "x$PREVENT_ASSEMBLY" == "x1" -a ! -e assemblydone.mark ]; then
-    /docker/assembly.sh
-    if [  -e /docker/assembly_custom.sh ]; then
-      /docker/assembly_custom.sh
-    fi
-fi
 # environment
 cd /opt/karaf
 if [ ! "x$PREVENT_ENVIRONMENT" == "x1" ]; then
@@ -33,14 +12,18 @@ if [ ! "x$PREVENT_ENVIRONMENT" == "x1" ]; then
       /docker/environment_custom.sh
     fi
 fi
-# install
-cd /opt/karaf
-if [ ! "x$PREVENT_DEPLOY" == "x1" ]; then
-    /docker/deploy.sh
-    if [  -e /docker/deploy_custom.sh ]; then
-      /docker/deploy_custom.sh
-    fi
+
+# profile
+
+if [ "x$CONFIG_PROFILE" == "x" ]; then
+  CONFIG_PROFILE=none
 fi
+if [ -e /docker/profiles/${CONFIG_PROFILE} ]; then
+  echo "- - - - - - - - - - - - - - - - - -"
+  echo "Copy profile ${CONFIG_PROFILE} to /opt/karaf"
+  cp -rv /docker/profiles/${CONFIG_PROFILE}/* /opt/karaf/
+fi
+
 # load environment
 if [ "x$SECRETS_DIRECTORY" != "x" ]; then
   for f in $SECRETS_DIRECTORY/* ; do
@@ -50,7 +33,7 @@ if [ "x$SECRETS_DIRECTORY" != "x" ]; then
       cat $f | read $n
     fi
   done
-fi
+fi  
 
 # Start Karaf
 

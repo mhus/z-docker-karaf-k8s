@@ -1,5 +1,5 @@
 FROM openjdk:11.0.5-jdk
-MAINTAINER Mike Hummel <mh@mhus.de>
+LABEL AUTHOR Mike Hummel <mh@mhus.de>
 
 ENV APP_UID=501
 
