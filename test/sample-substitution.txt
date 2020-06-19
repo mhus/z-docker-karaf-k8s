@@ -1,0 +1,2 @@
+Test 1: [{{env:LD_LIBRARY_PATH:None}}]
+Test 2: [{{file:/docker/environment_folders.txt:None}}]

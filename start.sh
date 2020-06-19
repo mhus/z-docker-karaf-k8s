@@ -31,7 +31,7 @@ fi
 if [ "x$CONFIG_PROFILE" == "x" ]; then
   CONFIG_PROFILE=default
 fi
-if [ -e /docker/profiles/${CONFIG_PROFILE} ]; then
+if [ -d /docker/profiles/${CONFIG_PROFILE} ]; then
   echo "--- Copy profile ${CONFIG_PROFILE} to /opt/karaf"
   cp -rv /docker/profiles/${CONFIG_PROFILE}/* /opt/karaf/
 fi
@@ -41,23 +41,25 @@ fi
 IFS=$'\n' read -d '' -r -a folders < /docker/environment_folders.txt
 
 for folder in "${folders[@]}"; do
-#    echo $folder
+    echo "=== Scan for substitute $folder"
     for file in $folder/*; do
         if [ -f $file ]; then
+          if [ $(grep -c '{{' $file) -gt 0 ]; then
             echo "--- Substitute $file"
-            /docker/substitude.py $file $file
+            /docker/substitute.py -v $file $file
+          fi
         fi
     done
 done
 
 # Start Karaf
 
-#echo "-------------------------------------"
-
 echo "-------------------------------------"
 echo "Start Karaf ($$) $@"
 echo "-------------------------------------"
 export KARAF_EXEC=exec
+cd /opt/karaf
+#bash
 exec ./bin/karaf $@
 echo "-------------------------------------"
 echo "Finish"

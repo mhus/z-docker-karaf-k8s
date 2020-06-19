@@ -14,9 +14,10 @@ __status__ = "Production"
 
 tagStart = "{{"
 tagEnd = "}}"
+verbose = False
 
 def substline(line):
-    global tagStart, tagEnd
+    global tagStart, tagEnd, verbose
     out = "";
     while True:
         pos = line.find(tagStart)
@@ -39,7 +40,8 @@ def substline(line):
         if pos >= 0:
             default = key[pos+1:]
             key = key[:pos]
-        #print("Type: " + t + " key: " + key + " Def: " + default)
+        if verbose:
+            sys.stderr.write("--- Type: " + t + " Key: " + key + " Default: " + default + "\n")
         if t == "env":
             out = out + os.getenv(key, default)
         if t == "file":
@@ -52,6 +54,7 @@ def substline(line):
     return out
 
 parser = argparse.ArgumentParser(description='Substitute parameter tags in a file')
+parser.add_argument('-v',action='store_true', help='Verbose output to stderr')
 parser.add_argument('-start', help='Tag start delimiter')
 parser.add_argument('-end', help='Tag end delimiter')
 parser.add_argument('source', nargs='?', help='File to substitude or stdin / stdout, this will overwrite the file')
@@ -59,6 +62,8 @@ parser.add_argument('target', nargs='?', help='Output file or stdout')
 
 args = parser.parse_args()
 
+if not args.v is None:
+    verbose = True
 if not args.start is None:
     tagStart = args.start
 
@@ -72,12 +77,12 @@ if not args.end is None:
 if args.source is None:
     for line in sys.stdin:
         out = substline(line)
-        sys.stdout.write(out);
+        sys.stdout.write(out)
 elif args.target is None:
     with open(args.source) as f: content = f.read()
     for line in content.splitlines():
         out = substline(line)
-        sys.stdout.write(out);
+        sys.stdout.write(out)
 else:
     with open(args.source) as f: content = f.read()
     f = open(args.target, "w")
