@@ -7,20 +7,24 @@ if [  ! -f Dockerfile ]; then
   return 1
 fi
 
-docker rmi mhus/karaf-k8s:$VERSION
-
 if [ "$1" = "clean" ]; then
-	docker build --no-cache -t mhus/karaf-k8s:$VERSION .
+  docker rmi mhus/karaf-k8s:$VERSION
+  docker build --no-cache -t mhus/karaf-k8s:$VERSION .
+  shift
 else
 	docker build -t mhus/karaf-k8s:$VERSION .
 fi
 
 if [ "$1" = "test" ]; then
   cd test
+  mkdir -p data/karaf
+  cp ../../../mhus/cherry-reactive/assembly/reactive-playground-assembly/target/assembly.tar.gz data/local-assembly.tar.gz
+  cp -r ../../../mhus/cherry-reactive/assembly/reactive-playground-assembly/src/main/resources/assembly/* data/karaf/
+  cp -r ../../../mhus/cherry-reactive/assembly/reactive-playground-docker/profiles/default/* data/karaf/
   docker rmi mhus/karaf-k8s-test:$VERSION
   docker stop karaf-k8s-test
   docker rm karaf-k8s-test
-	docker build -t mhus/karaf-k8s-test:$VERSION .
+  docker build -t mhus/karaf-k8s-test:$VERSION .
   docker run -it --name karaf-k8s-test mhus/karaf-k8s-test:$VERSION
 fi
 

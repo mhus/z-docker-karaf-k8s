@@ -29,11 +29,14 @@ RUN set -x \
 COPY karaf /docker/profiles/initial
 COPY start.sh /docker
 COPY install.sh /docker
+COPY substitute.py /docker
+COPY environment_folders.txt /docker
 
 RUN set -x \
     && echo ">>> Prepare start" \
     && chmod ugo+x /docker/start.sh \
     && chmod ugo+x /docker/install.sh \
+    && chmod ugo+x /docker/substitude.sh \
     && useradd -u $APP_UID -m user \
     && chown -R user:user /opt/karaf \
     && mkdir -p /home/user/.m2/repository \
