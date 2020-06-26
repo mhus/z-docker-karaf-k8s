@@ -63,10 +63,9 @@ parser.add_argument('target', nargs='?', help='Output file or stdout')
 args = parser.parse_args()
 
 if not args.v is None:
-    verbose = True
+    verbose = args.v
 if not args.start is None:
     tagStart = args.start
-
 if not args.end is None:
     tagEnd = args.end
 
@@ -83,11 +82,13 @@ elif args.target is None:
     for line in content.splitlines():
         out = substline(line)
         sys.stdout.write(out)
+        sys.stdout.write("\n")
 else:
     with open(args.source) as f: content = f.read()
     f = open(args.target, "w")
     for line in content.splitlines():
         out = substline(line)
         f.write(out)
+        f.write("\n")
     f.close()
 
