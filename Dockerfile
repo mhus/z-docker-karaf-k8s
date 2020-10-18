@@ -1,4 +1,4 @@
-FROM openjdk:11.0.5-jdk
+FROM openjdk:11.0.5-slim-buster
 LABEL AUTHOR Mike Hummel <mh@mhus.de>
 
 ENV APP_UID=501
@@ -11,7 +11,7 @@ ENV JAVA_DEBUG_PORT=*:5005
 
 RUN set -x \
     && echo ">>> Install linux tools" \
-    && apt-get update && apt-get install -y --no-install-recommends jq wget curl less nano \
+    && apt-get update && apt-get install -y --no-install-recommends python3 jq wget curl less nano \
     && echo ">>> Setup" \
     && mkdir /docker \
     && mkdir -p /docker/profiles/default \
@@ -41,7 +41,8 @@ RUN set -x \
     && chown -R user:user /opt/karaf \
     && mkdir -p /home/user/.m2/repository \
     && chown -R user:user /home/user/.m2 \
-    && chown -R user:user /docker
+    && chown -R user:user /docker \
+    && ln -sfn /opt/karaf/bin/client /usr/bin/client
 
 EXPOSE 8181
 
