@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=4.2.6.1
+VERSION=4.2.6.2
 
 if [  ! -f Dockerfile ]; then
   echo "not a docker configuration"

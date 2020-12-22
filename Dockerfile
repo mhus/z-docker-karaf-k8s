@@ -11,7 +11,7 @@ ENV JAVA_DEBUG_PORT=*:5005
 
 RUN set -x \
     && echo ">>> Install linux tools" \
-    && apt-get update && apt-get install -y --no-install-recommends python3 jq wget curl less nano \
+    && apt-get update && apt-get install -y --no-install-recommends python3 jq wget curl less nano procps\
     && echo ">>> Setup" \
     && mkdir /docker \
     && mkdir -p /docker/profiles/default \
