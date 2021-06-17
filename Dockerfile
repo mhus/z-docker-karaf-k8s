@@ -1,9 +1,9 @@
-FROM openjdk:11.0.5-slim-buster
+FROM openjdk:11.0.11-slim-buster
 LABEL AUTHOR Mike Hummel <mh@mhus.de>
 
 ENV APP_UID=501
 
-ARG BUILD_KARAF_VERSION=4.2.6
+ARG BUILD_KARAF_VERSION=4.2.11
 ENV JAVA_MAX_MEM=2048m
 ENV APP_NAME=karaf
 # for jdk9 and above, debug also from other then localhost
